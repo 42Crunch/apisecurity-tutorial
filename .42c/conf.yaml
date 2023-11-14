@@ -1,0 +1,3 @@
+apis:
+  api-specifications/PhotoManager.json:
+    alias: photo-manager

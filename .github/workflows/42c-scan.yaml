@@ -1,0 +1,57 @@
+name: "42Crunch API Security Scan"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "main" ]  
+
+env:
+    TARGET_URL: "http://localhost:8090/api"
+    # For illustration purposes only - This is fake data. 
+    # Use Secrets when dealing with sensitive data.
+    USER_NAME: "misty94@demo.mail"
+    USER_PASS: "ball"
+
+jobs:
+  run_42c_scan:
+    runs-on: ubuntu-20.04
+    permissions:
+     contents: read # for actions/checkout to fetch code
+     security-events: write # for results upload to Github Code Scanning
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Start API
+        run: docker compose up -d
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+      - name: Install Python prerequisites
+        run: pip install requests
+      - name: get_photoapi_token
+        id: get_photoapi_token
+        run: |
+          login_response=$(python .42c/scripts/pixi-login.py -u ${{ env.USER_NAME }} -p ${{ env.USER_PASS }})
+          echo "PHOTO_API_TOKEN=$login_response" >> $GITHUB_OUTPUT
+      - name: Scan API for vulnerabilities
+        uses: 42Crunch/api-security-scan-action-freemium@main
+        with:
+            # Upload results to Github Code Scanning
+            # Set to false if you don't have Github Advanced Security.
+            api-definition: api-specifications/PhotoManager.json
+            api-credential: ${{ steps.get_photoapi_token.outputs.PHOTO_API_TOKEN }}
+            target-url: ${{ env.TARGET_URL }}
+            upload-to-code-scanning: true
+            log-level: debug
+            sarif-report: 42Crunch_ScanReport_${{ github.run_id }}.SARIF
+      - name: save-scan-report
+        if: always()        
+        uses: actions/upload-artifact@v3
+        with:
+            name: 42Crunch_ScanReport_${{ github.run_id }}
+            path: 42Crunch_ScanReport_${{ github.run_id }}.SARIF
+            if-no-files-found: error  
