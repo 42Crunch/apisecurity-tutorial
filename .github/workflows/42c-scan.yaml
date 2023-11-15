@@ -21,37 +21,59 @@ jobs:
     permissions:
      contents: read # for actions/checkout to fetch code
      security-events: write # for results upload to Github Code Scanning
+    
+    services:
+      pixidb:
+        image: 42crunch/pixi:mongo
+        options: >-
+          --quiet
+          --health-cmd mongo
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 27017:27017
+      app:
+        image: 42crunch/pixi:v4.7
+        options: --link pixidb
+        ports:
+          - 8090:8090
+    
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      - name: Start API
-        run: docker compose up -d
       - name: Set up Python 3.11
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: 3.11
-      - name: Install Python prerequisites
-        run: pip install requests
       - name: get_photoapi_token
         id: get_photoapi_token
         run: |
-          login_response=$(python .42c/scripts/pixi-login.py -u ${{ env.USER_NAME }} -p ${{ env.USER_PASS }})
+          login_response=$(python .42c/scripts/pixi-login.py -u ${{ env.USER_NAME }} -p ${{ env.USER_PASS }} -t ${{ env.TARGET_URL }})
           echo "PHOTO_API_TOKEN=$login_response" >> $GITHUB_OUTPUT
       - name: Scan API for vulnerabilities
-        uses: 42Crunch/api-security-scan-action-freemium@main
+        uses: 42Crunch/api-security-scan-action-freemium@v1
         with:
             # Upload results to Github Code Scanning
             # Set to false if you don't have Github Advanced Security.
             api-definition: api-specifications/PhotoManager.json
             api-credential: ${{ steps.get_photoapi_token.outputs.PHOTO_API_TOKEN }}
-            target-url: ${{ env.TARGET_URL }}
+            target-url: "http://app:8090/api"
             upload-to-code-scanning: true
-            log-level: debug
+            scan-report: 42Crunch_RawReport_${{ github.run_id }}.json
+            log-level: info
             sarif-report: 42Crunch_ScanReport_${{ github.run_id }}.SARIF
-      - name: save-scan-report
+      - name: save-sarif-report
         if: always()        
         uses: actions/upload-artifact@v3
         with:
             name: 42Crunch_ScanReport_${{ github.run_id }}
             path: 42Crunch_ScanReport_${{ github.run_id }}.SARIF
-            if-no-files-found: error  
+            if-no-files-found: error
+      - name: save-scan-report
+        if: always()        
+        uses: actions/upload-artifact@v3
+        with:
+            name: 42Crunch_RawReport_${{ github.run_id }}
+            path: 42Crunch_RawReport_${{ github.run_id }}.json
+            if-no-files-found: error      
