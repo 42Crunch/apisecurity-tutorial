@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This tutorial walks you through the process of testing an API using 42Crunch Scan. The workflow uses `docker compose` to start a sample vulnerable API within the workflow runner, minimizing setup steps and then runs 42Crunch Scan against the API. 
+This tutorial walks you through the process of testing an API using 42Crunch Scan. The workflow uses Github Actions services to start a sample vulnerable API within the workflow runner, minimizing setup steps, and then runs 42Crunch Scan against the API. 
 
-Results are made available in the SARIF format and uploaded Github Code Scanning automatically.
+Results are made available in the SARIF format and uploaded to Github Code Scanning automatically.
 
 ## What is 42Crunch Scan?
 
@@ -12,7 +12,7 @@ Results are made available in the SARIF format and uploaded Github Code Scanning
 
 42Crunch Scan also validates API responses to ensure that the API implementation conforms to its definition and does not leak additional data or stack traces for example.
 
-The scan classifies vulnerabilities found issues according to the OWASP API Security Top 10. You can learn more about scan by watching [this short 5 mins video](https://42crunch.com/free-user-faq/).
+The scan classifies vulnerabilities it finds according to the OWASP API Security Top 10. You can learn more about scan by watching [this short 5 mins video](https://42crunch.com/free-user-faq/).
 
 ## PhotoManager API
 
@@ -26,23 +26,19 @@ The repository contains a docker compose file you can use, should you want to ru
 
 **GitHub Code Scanning**: this task assumes that GitHub Advanced Security is enabled on your repository. Code Scanning can be enabled for free on public repositories and for paid accounts on private repositories. You can enable Code Scanning by following the instructions [here](https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/about-code-scanning#enabling-code-scanning-for-a-repository).
 
-*Note*: this tutorial leverages the [Freemium version](https://github.com/marketplace/actions/42crunch-rest-api-dynamic-security-testing-freemium) of 42Crunch Scan. It is now available for GitHubActions  and will be added on more CI/CD platforms in the future.
+*Note*: this tutorial leverages the [Freemium version](https://github.com/marketplace/actions/42crunch-rest-api-dynamic-security-testing-freemium) of 42Crunch Scan. It is now available for GitHubActions and will be added on more CI/CD platforms in the future.
 
 ## Running the tutorial
 
-In order to run this tutorial, you will need to fork this repository and run the `42Crunch API Security Scan` workflow.
-
-### Fork this repository
-
-In order to follow this tutorial, you will need to fork this repository. To do this, click on the "Fork" button in the top right corner of this page.
+In order to run this tutorial, you will need to fork this repository and run the `42Crunch API Security Scan` workflow. To do this, click on the "Fork" button in the top right corner of this page.
 
 ### Enable workflows
 
-Once you fork this repository, workflows will be disabled for security reasons. You need to approve the workflow in order to run it. 
-
-Check  https://docs.github.com/en/actions/managing-workflow-runs/approving-workflow-runs-from-public-forks for further details.
+Once you fork this repository, workflows will be disabled for security reasons. You need to enable workflows in order to run them. To do this, go to the "Actions" tab of your repository and click on the "I understand my workflows, go ahead and enable them" button.
 
 ![](./graphics/freemium_eval_enableWorkflows.png)
+
+You can check  https://docs.github.com/en/actions/managing-workflow-runs/approving-workflow-runs-from-public-forks for further details.
 
 ### Run the workflow
 
@@ -66,4 +62,4 @@ The SARIF extension, once connected to GitHub, can directly display the issues f
 
 ## Conclusion
 
-In this tutorial, you have learnt how to use 42Crunch Scan to test an API for vulnerabilities leveraging the Freemium version of 42Crunch Scan. In the next tutorial, you can now apply what you learned to your own APIs!
+In this tutorial, you have learnt how to use 42Crunch Scan to test an API for vulnerabilities leveraging the Freemium version of 42Crunch Scan.
