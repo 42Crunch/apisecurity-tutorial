@@ -14,10 +14,10 @@
   },
   "servers": [
     {
-      "url": "https://yourdomain.ngrok.app/api"
+      "url": "http://localhost:8090/api",
+      "description": "Dev Server"
     }
   ],
-
   "tags": [
     {
       "name": "users",
@@ -134,85 +134,85 @@
     },
     "/user/info": {
       "get": {
-          "tags": [
-              "users"
-          ],
-          "summary": "get user information",
-          "description": "user supplies valid token and receives all user info",
-          "operationId": "GetUserInfo",
-          "responses": {
-              "200": {
-                  "description": "successful authentication sent user information",
-                  "content": {
-                      "application/json": {
-                          "schema": {
-                              "maxItems": 1,
-                              "minItems": 1,
-                              "type": "array",
-                              "items": {
-                                  "$ref": "#/components/schemas/UsersItem"
-                              }
-                          }
-                      }
+        "tags": [
+          "users"
+        ],
+        "summary": "get user information",
+        "description": "user supplies valid token and receives all user info",
+        "operationId": "GetUserInfo",
+        "responses": {
+          "200": {
+            "description": "successful authentication sent user information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "maxItems": 1,
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UsersItem"
                   }
-              },
-              "403": {
-                  "description": "invalid or missing token",
-                  "content": {
-                      "application/json": {
-                          "schema": {
-                              "$ref": "#/components/schemas/AuthenticationError"
-                          }
-                      }
-                  }
-              },
-              "default": {
-                  "description": "unexpected error",
-                  "content": {
-                      "application/json": {
-                          "schema": {
-                              "$ref": "#/components/schemas/ErrorMessage"
-                          }
-                      }
-                  }
+                }
               }
+            }
           },
-          "security": [
-              {
-                  "access-token": []
+          "403": {
+            "description": "invalid or missing token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationError"
+                }
               }
-          ],
-          "x-42c-local-strategy": {
-              "x-42c-strategy": {
-                  "protections": [
-                      {
-                          "x-42c-set-client-ip_0.1": {
-                              "ip.header.name": "X-Forwarded-For",
-                              "ip.header.mandatory": true,
-                              "remote.ip.allowlist": []
-                          }
-                      },
-                      {
-                          "x-42c-request-limiter_0.1": {
-                              "hits": 5,
-                              "window": 10,
-                              "add.retry_after": true,
-                              "key": "req_limiter_get_info"
-                          }
-                      },
-                      {
-                          "x-42c-jwt-validation-rsa_0.2": {
-                              "header.name": "x-access-token",
-                              "lifetime": 600,
-                              "jp.jose.header.schema": "#/x-42c-components/x-42c-schemas/jose-header",
-                              "jp.claims.schema": "#/x-42c-components/x-42c-schemas/jwt-claims"
-                          }
-                      }
-                  ]
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
               }
+            }
           }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "x-42c-local-strategy": {
+          "x-42c-strategy": {
+            "protections": [
+              {
+                "x-42c-set-client-ip_0.1": {
+                  "ip.header.name": "X-Forwarded-For",
+                  "ip.header.mandatory": true,
+                  "remote.ip.allowlist": []
+                }
+              },
+              {
+                "x-42c-request-limiter_0.1": {
+                  "hits": 5,
+                  "window": 10,
+                  "add.retry_after": true,
+                  "key": "req_limiter_get_info"
+                }
+              },
+              {
+                "x-42c-jwt-validation-rsa_0.2": {
+                  "header.name": "x-access-token",
+                  "lifetime": 600,
+                  "jp.jose.header.schema": "#/x-42c-components/x-42c-schemas/jose-header",
+                  "jp.claims.schema": "#/x-42c-components/x-42c-schemas/jwt-claims"
+                }
+              }
+            ]
+          }
+        }
       }
-  },
+    },
     "/picture/file_upload": {
       "post": {
         "tags": [

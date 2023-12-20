@@ -285,7 +285,7 @@
           "from": "environment",
           "name": "SCAN42C_HOST",
           "required": false,
-          "default": "https://yourdomain.ngrok.com/api"
+          "default": "http://localhost:8090/api"
         }
       }
     }
