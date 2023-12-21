@@ -28,7 +28,7 @@ jobs:
           upload-to-code-scanning: true
           log-level: info
           sarif-report: 42Crunch_AuditReport_${{ github.run_id }}.SARIF
-          export-as-pdf: 42Crunch_AuditReport_${{ github.run_id }}.PDF
+          export-as-pdf: 42Crunch_AuditReport_${{ github.run_id }}.pdf
       - name: save-sarif-report
         if: always()        
         uses: actions/upload-artifact@v3
@@ -41,5 +41,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: 42Crunch_AuditReport_${{ github.run_id }}
-          path: 42Crunch_AuditReport_${{ github.run_id }}.PDF
+          path: 42Crunch_AuditReport_${{ github.run_id }}.pdf
           if-no-files-found: error
