@@ -4,11 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches: [ "main" ]
-    paths: api-specifications/*
+    paths: 
+    - api-specifications/*
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "main" ]
-    paths: api-specifications/*
+
 
 jobs:
   run_42c_audit:
@@ -20,17 +21,33 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Audit API definition for security issues
-        uses: 42Crunch/api-security-audit-action-freemium@v1
+        uses: 42Crunch/api-security-audit-action-freemium@main
         with:
           # Upload results to Github Code Scanning
           # Set to false if you don't have Github Advanced Security.
           upload-to-code-scanning: true
           log-level: info
           sarif-report: 42Crunch_AuditReport_${{ github.run_id }}.SARIF
-      - name: save-audit-report
+          export-as-pdf: 42Crunch_AuditReport_${{ github.run_id }}.pdf
+          audit-reports-dir: ${{ github.workspace }}/reports
+      - name: save-sarif-report
         if: always()        
         uses: actions/upload-artifact@v3
         with:
           name: 42Crunch_AuditReport_${{ github.run_id }}
           path: 42Crunch_AuditReport_${{ github.run_id }}.SARIF
           if-no-files-found: error
+      - name: save-pdf-report
+        if: always()        
+        uses: actions/upload-artifact@v3
+        with:
+          name: 42Crunch_AuditReport_${{ github.run_id }}
+          path: 42Crunch_AuditReport_${{ github.run_id }}.pdf
+          if-no-files-found: error
+      - name: save-raw-reports
+        if: always()        
+        uses: actions/upload-artifact@v3
+        with:
+          name: 42Crunch_AuditReport_${{ github.run_id }}
+          path: ${{ github.workspace }}/reports
+          if-no-files-found: error    
