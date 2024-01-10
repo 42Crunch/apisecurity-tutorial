@@ -30,14 +30,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "appid",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
