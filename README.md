@@ -8,16 +8,15 @@ Audit and Scan results are made available in the SARIF format and uploaded to Gi
 
 ## What is 42Crunch Audit?
 
-Security Audit performs over 300 checks on your API contract, ranging from its structure and semantics to its security and input and output data definition. Security Audit reviews your API definition on three levels:
+42Crunch Audit performs over 300 checks on your API contract (OpenAPI or Swagger definition), ranging from its structure and semantics to its security and input and output data definition. Security Audit reviews your API definition on three levels:
 
 - Security: How good are the security definitions in your API? Have you defined authentication and authorization methods, and is your chosen protocol secure enough?
 - Data definitions: What is the data definition quality of your API? How well have you defined what data your API accepts as input or can include in the output it produces, and how strong are the schemas you have defined for your API and its parameters?
 - OpenAPI format: Is your API a valid and well-formed OpenAPI file, and does it follow the best practices and the spirit of the OpenAPI Specification? Can it be correctly parsed, reviewed, or protected?
 
-
 ## What is 42Crunch Scan?
 
-42Crunch Scan is a dynamic API security scanner that can be used to test APIs for vulnerabilities. It leverages the API OpenAPI definition to automatically test the API for a number of issues, across authentication, authorization and improper input validation. 
+42Crunch Scan is a dynamic API security scanner that can be used to test APIs for vulnerabilities. It leverages the API contract to automatically test the API for a number of issues, across authentication, authorization and improper input validation. 
 
 42Crunch Scan also validates API responses to ensure that the API implementation conforms to its definition and does not leak additional data or stack traces for example.
 
@@ -74,7 +73,7 @@ The SARIF extension, once connected to GitHub, can directly display the issues f
 The workflow is defined in the `.github/workflows/42c-audit.yaml` file. It is composed of 3 steps:
 1. Checkout the code repository
 2. Run 42Crunch Audit: the audit action finds all OpenAPI/Swagger files in the repository and runs the audit against them. The audit action also uploads the results to GitHub Code Scanning, if the `upload-to-code-scanning` parameter is set to true. Additionally, the audit action exports the results as PDF format, if the `export-as-pdf` parameter is provided.
-3. Save the SARIF and PDF reports as an artifact
+3. Save the SARIF and PDF reports as an artifact.
 
 A full list of audit action parameters is available [here](https://github.com/marketplace/actions/42crunch-rest-api-static-security-testing-freemium).
 
@@ -102,10 +101,10 @@ A full list of audit action parameters is available [here](https://github.com/ma
 
 ## Understanding the scan workflow
 
-The workflow is defined in the `.github/workflows/42crunch-api-security-scan.yml` file. It is composed of 4 steps:
+The workflow is defined in the `.github/workflows/42c-scan.yml` file. It is composed of 4 steps:
 
 1. Checkout the code repository
-2. Retrieving the credential to be used by the scan at execution time. This is done by using the /login endpoint of the Pixi API. For testing simplicity, the user and password are set at the beginning of the workflow. In real scenarios, the user and password would be stored in Github Secrets.
+2. Retrieve the credential to be used by the scan at execution time. This is done by using the `/login` endpoint of the Pixi API. For testing simplicity, the user and password are set at the beginning of the workflow. In real scenarios, the user and password would be stored in Github Secrets.
 3. Run 42Crunch Scan and upload the results to GitHub Code Scanning, using the credential retrieved in the previous step.
 4. Save the SARIF report as an artifact
 
@@ -137,8 +136,8 @@ The workflow is defined in the `.github/workflows/42crunch-api-security-scan.yml
             if-no-files-found: error
 ```
 
-A full list of scan action parameters is available [here](https://github.com/marketplace/actions/42crunch-rest-api-dynamic-security-testing-freemium)
+A full list of scan action parameters is available [here](https://github.com/marketplace/actions/42crunch-rest-api-dynamic-security-testing-freemium).
 
 ## Conclusion
 
-In this tutorial, you have learnt how to use 42Crunch Scan to test an API for vulnerabilities leveraging the Freemium version of 42Crunch Scan.
+In this tutorial, you have learnt how to use 42Crunch Audit and Scan services to test an API for vulnerabilities leveraging their Freemium versions. You have also learnt how to upload the results to GitHub Code Scanning and view them in the Security tab of your repository.
