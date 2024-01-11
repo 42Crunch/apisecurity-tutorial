@@ -55,12 +55,13 @@ jobs:
         uses: 42Crunch/api-security-scan-action-freemium@v1
         with:
             # Upload results to Github Code Scanning
-            # Set to false if you don't have Github Advanced Security.
+            # Set to false if you don't have Github Advanced Security enabled.
             api-definition: api-specifications/PhotoManager.json
             api-credential: ${{ steps.get_photoapi_token.outputs.PHOTO_API_TOKEN }}
             target-url: "http://app:8090/api"
             upload-to-code-scanning: true
             scan-report: 42Crunch_RawReport_${{ github.run_id }}.json
+            export-as-pdf: 42Crunch_ScanReport_${{ github.run_id }}.pdf
             log-level: info
             sarif-report: 42Crunch_ScanReport_${{ github.run_id }}.SARIF
       - name: save-sarif-report
@@ -74,6 +75,13 @@ jobs:
         if: always()        
         uses: actions/upload-artifact@v3
         with:
-            name: 42Crunch_RawReport_${{ github.run_id }}
+            name: 42Crunch_ScanReport_${{ github.run_id }}
             path: 42Crunch_RawReport_${{ github.run_id }}.json
-            if-no-files-found: error      
+            if-no-files-found: error  
+      - name: save-pdf-report
+        if: always()        
+        uses: actions/upload-artifact@v3
+        with:
+          name: 42Crunch_ScanReport_${{ github.run_id }}
+          path: 42Crunch_ScanReport_${{ github.run_id }}.pdf
+          if-no-files-found: error          

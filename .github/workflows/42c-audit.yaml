@@ -24,7 +24,7 @@ jobs:
         uses: 42Crunch/api-security-audit-action-freemium@main
         with:
           # Upload results to Github Code Scanning
-          # Set to false if you don't have Github Advanced Security.
+          # Set to false if you don't have Github Advanced Security enabled.
           upload-to-code-scanning: true
           log-level: info
           sarif-report: 42Crunch_AuditReport_${{ github.run_id }}.SARIF
