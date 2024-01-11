@@ -52,7 +52,7 @@ jobs:
           login_response=$(python .42c/scripts/pixi-login.py -u ${{ env.USER_NAME }} -p ${{ env.USER_PASS }} -t ${{ env.TARGET_URL }})
           echo "PHOTO_API_TOKEN=$login_response" >> $GITHUB_OUTPUT
       - name: Scan API for vulnerabilities
-        uses: 42Crunch/api-security-scan-action-freemium@v1
+        uses: 42Crunch/api-security-scan-action-freemium@main
         with:
             # Upload results to Github Code Scanning
             # Set to false if you don't have Github Advanced Security enabled.
