@@ -1,0 +1,21 @@
+trigger:
+  branches:
+    include:
+      - azuredevops-integration
+
+jobs:
+  - job: run-42crunch-audit 
+    displayName: 'Run Audit'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.x'
+          addToPath: true
+          architecture:  x64
+      - task: APIContractSecurityAuditFreemiumDev@1
+        inputs:
+          enforceSQG: false
+          sarifReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-auditreport.sarif'
+          exportAsPDF: '$(Build.Repository.LocalPath)/$(Build.BuildId)-auditreport.pdf'    
