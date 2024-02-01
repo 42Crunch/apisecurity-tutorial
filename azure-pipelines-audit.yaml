@@ -4,14 +4,14 @@ trigger:
       - azuredevops-integration
 
 jobs:
-  - job: run-42crunch-audit 
+  - job: run_42crunch_audit
     displayName: 'Run Audit'
     pool:
       vmImage: 'ubuntu-latest'
     steps:
       - task: UsePythonVersion@0
         inputs:
-          versionSpec: '3.x'
+          versionSpec: '3.11'
           addToPath: true
           architecture:  x64
       - task: APIContractSecurityAuditFreemiumDev@1
