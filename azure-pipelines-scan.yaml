@@ -26,7 +26,6 @@ jobs:
           abortOnContainerExit: true
           ports: 8090:8090
           detached: true
-
       - task: UsePythonVersion@0
         inputs:
           versionSpec: '3.x'
@@ -39,4 +38,13 @@ jobs:
           scriptSource: 'filePath' # Options: filePath, inline
           scriptPath: $(Build.Repository.LocalPath)/.42c/scripts/pixi-login.py
           arguments: -u $(USER_NAME) -p $(USER_PASS) -t $(TARGET_URL)
-      - script: echo $(setusertoken.PIXI_TOKEN)
+      - task: APISecurityScanFreemium@1
+        displayName: Scan API
+        inputs:
+          apiDefinition: '$(Build.Repository.LocalPath)/api-specifications/PhotoManager.json'
+          APICredentials: $(setusertoken.PIXI_TOKEN)
+          targetURL: '$(TARGET_URL)'
+          sarifReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.sarif'
+          exportAsPDF: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.pdf'
+          scanReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.json'
+          
