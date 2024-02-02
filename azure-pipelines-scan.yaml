@@ -11,7 +11,7 @@ variables:
   USER_PASS: "ball"
 
 jobs:
-  - job: run-42crunch-scan 
+  - job: run_42crunch_scan 
     displayName: 'Run Scan'
     pool:
       vmImage: 'ubuntu-latest'
