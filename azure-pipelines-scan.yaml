@@ -39,4 +39,4 @@ jobs:
           scriptSource: 'filePath' # Options: filePath, inline
           scriptPath: $(Build.Repository.LocalPath)/.42c/scripts/pixi-login.py
           arguments: -u $(USER_NAME) -p $(USER_PASS) -t $(TARGET_URL)
-      - script: echo '$(setusertoken.USER_TOKEN)'
+      - script: echo $(setusertoken.USER_TOKEN)
