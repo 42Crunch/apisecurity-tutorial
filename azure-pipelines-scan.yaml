@@ -37,7 +37,6 @@ jobs:
         displayName: Get User Credential
         inputs:
           scriptSource: 'filePath' # Options: filePath, inline
-          scriptPath: $(Build.Repository.LocalPath)/scripts/pixi-login.py
+          scriptPath: $(Build.Repository.LocalPath)/.42c/scripts/pixi-login.py
           arguments: -u $(USER_NAME) -p $(USER_PASS) -t $(TARGET_URL)
       - script: echo '$(setusertoken.USER_TOKEN)'
-  
