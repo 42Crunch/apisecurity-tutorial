@@ -6,6 +6,7 @@ import json
 import argparse
 import urllib.error
 import urllib.request
+import subprocess
 
 # Obtain a JWT token using login to PhtoManager app. 
 # API comes with pre-loaded users we use from the 42c-scan workflow.
@@ -81,7 +82,7 @@ def main():
         sys.exit(1)
 
     else:
-        print(user_token)
+        subprocess.Popen(["echo", "##vso[task.setvariable variable=PIXI_TOKEN;isoutput=true]{0}".format(user_token)])
 
 
 # -------------- Main Section ----------------------

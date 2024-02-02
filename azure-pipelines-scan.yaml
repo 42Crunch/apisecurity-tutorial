@@ -1,0 +1,43 @@
+trigger:
+  branches:
+    include:
+      - main
+
+variables:
+  TARGET_URL: "http://localhost:8090/api"
+  # For illustration purposes only - This is fake data. 
+  # Use Secrets when dealing with sensitive data.
+  USER_NAME: "misty94@demo.mail"
+  USER_PASS: "ball"
+
+jobs:
+  - job: run-42crunch-scan 
+    displayName: 'Run Scan'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: DockerCompose@0
+        displayName: Run services
+        inputs:
+          action: Run services
+          dockerComposeFile: docker-compose.yaml
+          projectName: photomanager
+          qualifyImageNames: true
+          abortOnContainerExit: true
+          ports: 8090:8090
+          detached: true
+
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.x'
+          addToPath: true
+          architecture: 'x64'
+      - task: PythonScript@0
+        name: setusertoken
+        displayName: Get User Credential
+        inputs:
+          scriptSource: 'filePath' # Options: filePath, inline
+          scriptPath: $(Build.Repository.LocalPath)/scripts/pixi-login.py
+          arguments: -u $(USER_NAME) -p $(USER_PASS) -t $(TARGET_URL)
+      - script: echo '$(setusertoken.USER_TOKEN)'
+  
