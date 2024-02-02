@@ -17,5 +17,6 @@ jobs:
       - task: APIContractSecurityAuditFreemiumDev@1
         inputs:
           enforceSQG: false
+          logLevel: DEBUG
           sarifReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-auditreport.sarif'
           exportAsPDF: '$(Build.Repository.LocalPath)/$(Build.BuildId)-auditreport.pdf'    
