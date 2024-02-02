@@ -82,6 +82,7 @@ def main():
         sys.exit(1)
 
     else:
+        print (user_token)
         subprocess.Popen(["echo", "##vso[task.setvariable variable=PIXI_TOKEN;isoutput=true]{0}".format(user_token)])
 
 
