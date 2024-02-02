@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-      - main
+      - azuredevops-integration
 
 variables:
   TARGET_URL: "http://localhost:8090/api"
