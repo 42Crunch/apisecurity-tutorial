@@ -14,7 +14,7 @@ jobs:
           versionSpec: '3.11'
           addToPath: true
           architecture:  x64
-      - task: APIContractSecurityAuditFreemiumDev@1
+      - task: 42CrunchAuditFreemium@1
         inputs:
           enforceSQG: false
           logLevel: DEBUG
