@@ -45,6 +45,5 @@ jobs:
           APICredentials: $(setusertoken.PIXI_TOKEN)
           targetURL: '$(TARGET_URL)'
           sarifReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.sarif'
-          exportAsPDF: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.pdf'
           scanReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.json'
           
