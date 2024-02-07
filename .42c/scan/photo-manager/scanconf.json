@@ -225,52 +225,6 @@
           }
         }
       }
-    },
-    "ViewPicturesList": {
-      "operationId": "ViewPicturesList",
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "fuzzing": true,
-          "requests": [
-            {
-              "$ref": "#/operations/ViewPicturesList/request",
-              "fuzzing": true
-            }
-          ]
-        }
-      ],
-      "request": {
-        "operationId": "ViewPicturesList",
-        "auth": [
-          "access-token"
-        ],
-        "request": {
-          "type": "42c",
-          "details": {
-            "url": "{{host}}/user/pictures",
-            "method": "GET"
-          }
-        },
-        "defaultResponse": "200",
-        "responses": {
-          "200": {
-            "expectations": {
-              "httpStatus": 200
-            }
-          },
-          "403": {
-            "expectations": {
-              "httpStatus": 403
-            }
-          },
-          "default": {
-            "expectations": {
-              "httpStatus": "default"
-            }
-          }
-        }
-      }
     }
   },
   "environments": {
