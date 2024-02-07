@@ -7,7 +7,7 @@ jobs:
   - job: run_42crunch_audit
     displayName: 'Run Audit'
     pool:
-      vmImage: 'windows-latest'
+      vmImage: 'ubuntu-latest'
     steps:
       - task: UsePythonVersion@0
         displayName: Install Python
