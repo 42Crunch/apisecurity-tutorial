@@ -22,3 +22,15 @@ jobs:
           logLevel: DEBUG
           sarifReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-auditreport.sarif'
           exportAsPDF: '$(Build.Repository.LocalPath)/$(Build.BuildId)-auditreport.pdf'    
+      - task: PublishBuildArtifacts@1
+        displayName: publishAuditSarif
+        inputs:
+          PathtoPublish: '$(Build.Repository.LocalPath)/$(Build.BuildId)-auditreport.sarif'
+          ArtifactName: 'CodeAnalysisLogs'
+          publishLocation: 'Container'  
+      - task: PublishBuildArtifacts@1
+        displayName: publishAuditSarif
+        inputs:
+          PathtoPublish: '$(Build.Repository.LocalPath)/$(Build.BuildId)-auditreport.pdf'
+          ArtifactName: 'Reports'
+          publishLocation: 'Container'      
