@@ -45,6 +45,19 @@ jobs:
           APICredentials: $(setusertoken.PIXI_TOKEN)
           targetURL: '$(TARGET_URL)'
           logLevel: 'DEBUG'
+          exportAsPDF: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.pdf'
           sarifReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.sarif'
           scanReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.json'
-          
+      - task: PublishBuildArtifacts@1
+        displayName: publishScanSarif
+        inputs:
+          PathtoPublish: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.sarif'
+          ArtifactName: 'CodeAnalysisLogs'
+          publishLocation: 'Container'
+      - task: PublishBuildArtifacts@1
+        displayName: publishAuditSarif
+        inputs:
+          PathtoPublish: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.pdf'
+          ArtifactName: 'Reports'
+          publishLocation: 'Container'    
+        
