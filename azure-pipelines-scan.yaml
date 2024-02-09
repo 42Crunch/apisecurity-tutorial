@@ -1,0 +1,69 @@
+trigger:
+  branches:
+    include:
+      - azuredevops-integration
+
+variables:
+  TARGET_URL: "http://localhost:8090/api"
+  # For illustration purposes only - This is fake data. 
+  # Use Secrets when dealing with sensitive data.
+  USER_NAME: "misty94@demo.mail"
+  USER_PASS: "ball"
+
+jobs:
+  - job: run_42crunch_scan 
+    displayName: 'Run Scan'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: DockerCompose@0
+        displayName: Run services
+        inputs:
+          action: Run services
+          dockerComposeFile: docker-compose.yaml
+          projectName: photomanager
+          qualifyImageNames: true
+          abortOnContainerExit: true
+          ports: 8090:8090
+          detached: true
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.11'
+          addToPath: true
+          architecture: 'x64'
+      - task: PythonScript@0
+        name: setusertoken
+        displayName: Get User Credential
+        inputs:
+          scriptSource: 'filePath' # Options: filePath, inline
+          scriptPath: $(Build.Repository.LocalPath)/.42c/scripts/pixi-login.py
+          arguments: -u $(USER_NAME) -p $(USER_PASS) -t $(TARGET_URL) -c AZURE
+      - task: APISecurityScanFreemium@1
+        displayName: Scan API
+        inputs:
+          apiDefinition: '$(Build.Repository.LocalPath)/api-specifications/PhotoManager.json'
+          apiCredential: $(setusertoken.PIXI_TOKEN)
+          targetURL: '$(TARGET_URL)'
+          logLevel: 'DEBUG'
+          exportAsPDF: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.pdf'
+          sarifReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.sarif'
+          scanReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.json'
+      - task: PublishBuildArtifacts@1
+        displayName: publishScanSarif
+        inputs:
+          PathtoPublish: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.sarif'
+          ArtifactName: 'CodeAnalysisLogs'
+          publishLocation: 'Container'
+      - task: PublishBuildArtifacts@1
+        displayName: publishScanPDF
+        inputs:
+          PathtoPublish: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.pdf'
+          ArtifactName: 'Reports'
+          publishLocation: 'Container'  
+      - task: PublishBuildArtifacts@1
+        displayName: publishRawReport
+        inputs:
+          PathtoPublish: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.json'
+          ArtifactName: 'Reports'
+          publishLocation: 'Container'
+        

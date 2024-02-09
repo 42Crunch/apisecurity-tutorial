@@ -6,6 +6,7 @@ import json
 import argparse
 import urllib.error
 import urllib.request
+import subprocess
 
 # Obtain a JWT token using login to PhtoManager app. 
 # API comes with pre-loaded users we use from the 42c-scan workflow.
@@ -64,12 +65,16 @@ def main():
                         default=False,
                         action="store_true",
                         help="debug level")
+    parser.add_argument ('-c','--cicd',
+                         required=True,
+                         help="One of GITHUB/AZURE")
     parsed_cli = parser.parse_args()
 
     quiet = parsed_cli.quiet
     debug = parsed_cli.debug
     user = parsed_cli.user_name
     password = parsed_cli.user_pass
+    cicd_platform = parsed_cli.cicd 
 
     user_token = obtain_token(user, password, target_url=parsed_cli.target, quiet=quiet, debug=debug)
     # Uncomment this for integration with Azure DevOps
@@ -81,8 +86,13 @@ def main():
         sys.exit(1)
 
     else:
-        print(user_token)
-
+        match cicd_platform:
+            case "GITHUB":
+                print(user_token)
+            case "AZURE":
+                subprocess.Popen(["echo", "##vso[task.setvariable variable=PIXI_TOKEN;isoutput=true]{0}".format(user_token)])  
+            case _:
+                print ("Unsupported CICD option")
 
 # -------------- Main Section ----------------------
 if __name__ == '__main__':

@@ -1,0 +1,7 @@
+{
+    "openapi.docker": {
+        "replaceLocalhost": true,
+        "useHostNetwork": true
+    },
+    "openapi.platformConformanceScanRuntime": "cli"
+}
