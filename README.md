@@ -79,8 +79,6 @@ The SARIF extension, once connected to GitHub, can directly display the issues f
 
 In order to run this tutorial, you will need to fork this repository. To do this, click on the "Fork" button in the top right corner of this page.
 
-
-
 ## Understanding the audit workflows
 
 The workflows are defined in:
