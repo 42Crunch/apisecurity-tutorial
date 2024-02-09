@@ -55,9 +55,15 @@ jobs:
           ArtifactName: 'CodeAnalysisLogs'
           publishLocation: 'Container'
       - task: PublishBuildArtifacts@1
-        displayName: publishAuditSarif
+        displayName: publishScanPDF
         inputs:
           PathtoPublish: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.pdf'
           ArtifactName: 'Reports'
-          publishLocation: 'Container'    
+          publishLocation: 'Container'  
+      - task: PublishBuildArtifacts@1
+        displayName: publishRawReport
+        inputs:
+          PathtoPublish: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.json'
+          ArtifactName: 'Reports'
+          publishLocation: 'Container'
         

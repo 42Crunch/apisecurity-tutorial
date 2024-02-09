@@ -29,8 +29,8 @@ jobs:
           ArtifactName: 'CodeAnalysisLogs'
           publishLocation: 'Container'  
       - task: PublishBuildArtifacts@1
-        displayName: publishAuditSarif
+        displayName: publishAuditPDF
         inputs:
           PathtoPublish: '$(Build.Repository.LocalPath)/$(Build.BuildId)-auditreport.pdf'
           ArtifactName: 'Reports'
-          publishLocation: 'Container'      
+          publishLocation: 'Container'
