@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-      - azuredevops-integration
+      - main
 
 jobs:
   - job: run_42crunch_audit
