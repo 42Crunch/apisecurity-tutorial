@@ -44,7 +44,7 @@ jobs:
           apiDefinition: '$(Build.Repository.LocalPath)/api-specifications/PhotoManager.json'
           apiCredential: $(setusertoken.PIXI_TOKEN)
           targetURL: '$(TARGET_URL)'
-          logLevel: 'DEBUG'
+          logLevel: 'INFO'
           exportAsPDF: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.pdf'
           sarifReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.sarif'
           scanReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-scanreport.json'

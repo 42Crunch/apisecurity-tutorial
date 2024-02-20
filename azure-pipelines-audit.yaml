@@ -19,7 +19,7 @@ jobs:
         displayName: Audit API Specifications
         inputs:
           enforceSQG: false
-          logLevel: DEBUG
+          logLevel: INFO
           sarifReport: '$(Build.Repository.LocalPath)/$(Build.BuildId)-auditreport.sarif'
           exportAsPDF: '$(Build.Repository.LocalPath)/$(Build.BuildId)-auditreport.pdf'    
       - task: PublishBuildArtifacts@1
