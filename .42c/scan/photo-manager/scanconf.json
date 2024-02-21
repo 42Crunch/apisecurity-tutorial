@@ -357,7 +357,7 @@
         "type": "42c",
         "details": {
           "method": "POST",
-          "url": "{{host}}/user/login",
+          "url": "{{host}}/foo/user/login",
           "headers": [
             {
               "key": "Content-Type",
