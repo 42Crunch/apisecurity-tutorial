@@ -45,44 +45,46 @@
       }
     }
   },
-  "authenticationDetails": [
-    {
-      "access-token": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "x-access-token",
-        "default": "access-token",
-        "credentials": {
-          "access-token": {
-            "description": "access-token security",
-            "credential": "{{access-token}}"
-          }
+  "environments": {
+    "default": {
+      "variables": {
+        "access-token": {
+          "name": "SCAN42C_SECURITY_ACCESS_TOKEN",
+          "from": "environment",
+          "required": true
+        },
+        "host": {
+          "name": "SCAN42C_HOST",
+          "from": "environment",
+          "required": false,
+          "default": "http://localhost:8090"
+        },
+        "username": {
+          "name": "SCAN42C_USERNAME",
+          "from": "environment",
+          "required": false,
+          "default": "barbara8@demo.mail"
+        },
+        "password": {
+          "name": "SCAN42C_PASSWORD",
+          "from": "environment",
+          "required": false,
+          "default": "ball"
         }
       }
     }
-  ],
+  },
   "operations": {
     "CreateUser": {
       "operationId": "CreateUser",
-      "scenarios": [
-        {
-          "key": "happy.path",
-          "fuzzing": true,
-          "requests": [
-            {
-              "$ref": "#/operations/CreateUser/request",
-              "fuzzing": true
-            }
-          ]
-        }
-      ],
       "request": {
         "operationId": "CreateUser",
         "request": {
           "type": "42c",
           "details": {
-            "url": "{{host}}/user/register",
+            "operationId": "CreateUser",
             "method": "POST",
+            "url": "{{host}}/user/register",
             "headers": [
               {
                 "key": "Content-Type",
@@ -119,22 +121,22 @@
             }
           }
         }
-      }
-    },
-    "GetUserInfo": {
-      "operationId": "GetUserInfo",
+      },
       "scenarios": [
         {
           "key": "happy.path",
-          "fuzzing": true,
           "requests": [
             {
-              "$ref": "#/operations/GetUserInfo/request",
-              "fuzzing": true
+              "fuzzing": true,
+              "$ref": "#/operations/CreateUser/request"
             }
-          ]
+          ],
+          "fuzzing": true
         }
-      ],
+      ]
+    },
+    "GetUserInfo": {
+      "operationId": "GetUserInfo",
       "request": {
         "operationId": "GetUserInfo",
         "auth": [
@@ -143,8 +145,9 @@
         "request": {
           "type": "42c",
           "details": {
-            "url": "{{host}}/user/info",
-            "method": "GET"
+            "operationId": "GetUserInfo",
+            "method": "GET",
+            "url": "{{host}}/user/info"
           }
         },
         "defaultResponse": "200",
@@ -165,32 +168,96 @@
             }
           }
         }
-      }
-    },
-    "UploadPicture": {
-      "operationId": "UploadPicture",
+      },
       "scenarios": [
         {
           "key": "happy.path",
-          "fuzzing": true,
           "requests": [
             {
-              "$ref": "#/operations/UploadPicture/request",
-              "fuzzing": true
+              "fuzzing": true,
+              "$ref": "#/operations/GetUserInfo/request"
             }
-          ]
+          ],
+          "fuzzing": true
         }
-      ],
+      ]
+    },
+    "UpdateUser": {
+      "operationId": "UpdateUser",
       "request": {
-        "operationId": "UploadPicture",
+        "operationId": "UpdateUser",
         "auth": [
           "access-token"
         ],
         "request": {
           "type": "42c",
           "details": {
-            "url": "{{host}}/picture/file_upload",
+            "operationId": "UpdateUser",
+            "method": "PUT",
+            "url": "{{host}}/user/edit_info",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "requestBody": {
+              "mode": "json",
+              "json": {
+                "account_balance": 500,
+                "name": "Updated User"
+              }
+            }
+          }
+        },
+        "defaultResponse": "200",
+        "responses": {
+          "200": {
+            "expectations": {
+              "httpStatus": 200
+            }
+          },
+          "403": {
+            "expectations": {
+              "httpStatus": 403
+            }
+          },
+          "default": {
+            "expectations": {
+              "httpStatus": "default"
+            }
+          }
+        }
+      },
+      "scenarios": [
+        {
+          "key": "happy.path",
+          "requests": [
+            {
+              "fuzzing": true,
+              "$ref": "#/operations/UpdateUser/request"
+            }
+          ],
+          "fuzzing": true
+        }
+      ],
+      "authorizationTests": [
+        "Update-Unprivileged-User"
+      ]
+    },
+    "UploadPicture": {
+      "operationId": "UploadPicture",
+      "request": {
+        "operationId": "UploadPicture",
+        "auth": [
+          "additional-tokens"
+        ],
+        "request": {
+          "type": "42c",
+          "details": {
+            "operationId": "UploadPicture",
             "method": "POST",
+            "url": "{{host}}/picture/file_upload",
             "headers": [
               {
                 "key": "Content-Type",
@@ -224,22 +291,105 @@
             }
           }
         }
-      }
+      },
+      "scenarios": [
+        {
+          "key": "happy.path",
+          "requests": [
+            {
+              "fuzzing": true,
+              "$ref": "#/operations/UploadPicture/request"
+            }
+          ],
+          "fuzzing": true
+        }
+      ]
     }
   },
-  "environments": {
-    "default": {
-      "variables": {
-        "access-token": {
-          "from": "environment",
-          "name": "SCAN42C_SECURITY_ACCESS_TOKEN",
-          "required": true
-        },
-        "host": {
-          "from": "environment",
-          "name": "SCAN42C_HOST",
-          "required": false,
-          "default": "https://yourdomain.ngrok.com/api"
+  "authenticationDetails": [
+    {
+      "access-token": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-access-token",
+        "default": "access-token",
+        "credentials": {
+          "access-token": {
+            "credential": "{{access-token}}",
+            "description": "access-token security"
+          }
+        }
+      },
+      "additional-tokens": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-access-token",
+        "default": "barbtoken",
+        "description": "",
+        "credentials": {
+          "barbtoken": {
+            "credential": "{{barb-token}}",
+            "description": "",
+            "requests": [
+              {
+                "$ref": "#/requests/UserLogin"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "authorizationTests": {
+    "Update-Unprivileged-User": {
+      "key": "authentication-swapping-bola",
+      "source": [
+        "access-token/access-token"
+      ],
+      "target": [
+        "additional-tokens/barbtoken"
+      ]
+    }
+  },
+  "requests": {
+    "UserLogin": {
+      "request": {
+        "type": "42c",
+        "details": {
+          "method": "POST",
+          "url": "{{host}}/user/login",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "requestBody": {
+            "mode": "json",
+            "json": {
+              "user": "{{username}}",
+              "pass": "{{password}}"
+            }
+          }
+        }
+      },
+      "defaultResponse": "200",
+      "responses": {
+        "200": {
+          "expectations": {
+            "httpStatus": 200
+          },
+          "variableAssignments": {
+            "barb-token": {
+              "in": "body",
+              "from": "response",
+              "contentType": "json",
+              "path": {
+                "type": "jsonPointer",
+                "value": "/token"
+              }
+            }
+          }
         }
       }
     }
