@@ -14,7 +14,7 @@
   },
   "servers": [
     {
-      "url": "https://photo-demo.westeurope.cloudapp.azure.com/api"
+      "url": "http://localhost:8090/api"
     }
   ],
   "tags": [

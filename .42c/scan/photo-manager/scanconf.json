@@ -57,7 +57,7 @@
           "name": "SCAN42C_HOST",
           "from": "environment",
           "required": false,
-          "default": "https://photo-demo.westeurope.cloudapp.azure.com/api"
+          "default": "http://localhost:8090/api"
         },
         "username": {
           "name": "SCAN42C_USERNAME",
